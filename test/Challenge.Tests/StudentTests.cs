@@ -25,6 +25,19 @@ namespace Challenge.Tests
         }
 
         [Fact]
+        public void CheckStatisticsWhenNoGrades()
+        {
+            var student = new Student("Frank");
+
+            var stat = student.GetStatistics();
+
+            Assert.True(double.IsNaN(stat.Minimum));
+            Assert.True(double.IsNaN(stat.Maximum));
+            Assert.True(double.IsNaN(stat.Average));
+            Assert.True(stat.LetterGrade == null);
+        }
+
+        [Fact]
         public void ReferenceChecks()
         {
             var student1 = new Student("Marek");
