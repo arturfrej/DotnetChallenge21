@@ -7,16 +7,10 @@ namespace ChallengeApp
     {
         static void Main(string[] args)
         {
-
-            Console.WriteLine("Hello World!");
-
-            // var numbers = new List<double>() {1, 15.1, 22.5};
-            // foreach(var n in numbers)
-            // {
-            //     Console.WriteLine(n);
-            // }
             
             var student = new Student("Anton");
+
+            student.ChangeName("Janek");
 
             student.GradeAdded += OnGradeAdded;
             

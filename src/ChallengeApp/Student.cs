@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace ChallengeApp
 {
-    public delegate void GradeAddedDelegate(object sender, GradeAddedEventArgs args);
-
     public class Student : Human
     {
         private List<double> grades = new List<double>();

@@ -1,5 +1,7 @@
 namespace ChallengeApp
 {
+    public delegate void GradeAddedDelegate(object sender, GradeAddedEventArgs args);
+    
     public abstract class StudentBase : Human, IStudent
     {
         public StudentBase(string name) : base(name)

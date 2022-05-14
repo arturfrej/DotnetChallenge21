@@ -4,7 +4,7 @@ using ChallengeApp;
 
 namespace Challenge.Tests
 {
-    public class UnitTest1
+    public class StudentTests
     {
         [Fact]
         public void CheckStatistics()
@@ -21,6 +21,7 @@ namespace Challenge.Tests
             Assert.Equal(1, stat.Minimum);
             Assert.Equal(6, stat.Maximum);
             Assert.Equal(3.12, stat.Average, 2);
+            Assert.Equal("D", stat.LetterGrade);
         }
 
         [Fact]
@@ -39,6 +40,78 @@ namespace Challenge.Tests
             Assert.True(Object.ReferenceEquals(student3, student3a));
             Assert.False(student2.Equals(student3));
             Assert.True(student3.Equals(student3a));
+        }
+
+        [Fact]
+        public void NameChangeWithDigitThrowsException()
+        {
+            var student = new Student("Anton");
+
+            Action act = () => student.ChangeName("Ant0n");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
+        }
+
+        [Fact]
+        public void NameChangeToEmptyThrowsException()
+        {
+            var student = new Student("Anton");
+
+            Action act = () => student.ChangeName("");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
+        }
+
+        [Fact]
+        public void NameChangeToWhitespaceThrowsException()
+        {
+            var student = new Student("Anton");
+
+            Action act = () => student.ChangeName(" ");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
+        }
+
+        [Fact]
+        public void NameWithDigitThrowsException()
+        {
+            Action act = () => new Student("Ant0n");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
+        }
+
+        [Fact]
+        public void EmptyNameThrowsException()
+        {
+            Action act = () => new Student("");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
+        }
+
+        [Fact]
+        public void NameWhitespaceThrowsException()
+        {
+            Action act = () => new Student(" ");
+
+            ArgumentException exception = Assert.Throws<ArgumentException>(act);
+
+            Assert.Equal("Invalid argument Name", exception.Message);
+
         }
     }
 }
