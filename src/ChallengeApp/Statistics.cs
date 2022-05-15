@@ -5,21 +5,19 @@ namespace ChallengeApp
 {
     public class Statistics
     {
-        private readonly List<double> grades = new List<double>();
+        public double Sum {get; private set;}
+        public double Count {get; private set;} 
+        private double minimum;
+        private double maximum;
         public double Minimum
         {
             get
             {
-                if(this.grades.Count == 0)
+                if(this.Count == 0)
                     return double.NaN;
                 else
                 {
-                    var min = double.PositiveInfinity;
-                    foreach(var grade in this.grades)
-                    {
-                        min = Math.Min(grade, min);
-                    }
-                    return min;
+                    return this.minimum;
                 }
             }
         }
@@ -27,40 +25,23 @@ namespace ChallengeApp
         {
             get
             {
-                if(this.grades.Count == 0)
+                if(this.Count == 0)
                     return double.NaN;
                 else
                 {
-                    var max = double.NegativeInfinity;
-                    foreach(var grade in this.grades)
-                    {
-                        max = Math.Max(grade, max);
-                    }
-                    return max;
+                    return this.maximum;
                 }
-            }
-        }
-        public double Sum
-        {
-            get
-            {
-                double sum = 0;
-                foreach(var grade in this.grades)
-                {
-                    sum += grade;
-                }
-                return sum;
             }
         }
         public double Average
         {
             get
             {
-                if(this.grades.Count == 0)
+                if(this.Count == 0)
                     return double.NaN;
                 else
                 {
-                    return this.Sum / this.grades.Count;
+                    return this.Sum / this.Count;
                 }
             }
         }
@@ -99,9 +80,35 @@ namespace ChallengeApp
             }
         }
 
+        public Statistics()
+        {
+            this.ClearGrades();
+        }
+
         public Statistics(List<double> grades)
         {
-            this.grades = grades;
+            this.ClearGrades();
+            
+            foreach(var grade in grades)
+            {
+                this.AddGrade(grade);
+            }
+        }
+
+        public void ClearGrades()
+        {
+            this.Count = 0;
+            this.Sum = 0;
+            this.minimum = double.PositiveInfinity;
+            this.maximum = double.NegativeInfinity;
+        }
+
+        public void AddGrade(double grade)
+        {
+            this.Count += 1;
+            this.Sum += grade;
+            this.minimum = Math.Min(grade, this.minimum);
+            this.maximum = Math.Max(grade, this.maximum);
         }
     }
 }

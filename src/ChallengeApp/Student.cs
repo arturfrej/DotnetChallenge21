@@ -3,17 +3,20 @@ using System.Collections.Generic;
 
 namespace ChallengeApp
 {
-    public class Student : Human
+    public class Student : StudentBase
     {
-        private List<double> grades = new List<double>();
-        
-        public event GradeAddedDelegate GradeAdded;
+        private List<double> grades;
+        private Statistics stats;
+        public override event GradeAddedDelegate GradeAdded;
+        public override event GradesClearedDelegate GradesCleared;
 
         public Student(string name) : base(name)
         {
+            this.grades = new List<double>();
+            this.stats = new Statistics();
         }
 
-        public void AddGrade(double grade)
+        public override void AddGrade(double grade)
         {
             if(grade < 1 || grade > 6)
             {
@@ -21,6 +24,7 @@ namespace ChallengeApp
             }
 
             this.grades.Add(grade);
+            this.stats.AddGrade(grade);
             
             if(this.GradeAdded != null)
             {
@@ -39,7 +43,7 @@ namespace ChallengeApp
             }
         }
 
-        public void AddGrade(string grade)
+        public override void AddGrade(string grade)
         {
             double val;
 
@@ -68,15 +72,20 @@ namespace ChallengeApp
             this.AddGrade(val);
         }
 
-        public void ClearGrades()
+        public override void ClearGrades()
         {
             this.grades.Clear();
+            this.stats.ClearGrades();
+
+            if(this.GradesCleared != null)
+            {
+                this.GradesCleared(this);
+            }
         }
 
-        public Statistics GetStatistics()
+        public override Statistics GetStatistics()
         {
-            var stats = new Statistics(this.grades);
-            return stats;
+            return this.stats;
         }
     }
 }
