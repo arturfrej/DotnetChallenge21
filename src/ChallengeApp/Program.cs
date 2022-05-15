@@ -8,7 +8,7 @@ namespace ChallengeApp
         static void Main(string[] args)
         {
             
-            var student = new Student("Anton");
+            var student = new StudentInFile("Anton");
 
             student.ChangeName("Janek");
 
@@ -31,7 +31,7 @@ namespace ChallengeApp
             }
         }
 
-        static public void DisplayStatistics(Student student)
+        static public void DisplayStatistics(IStudent student)
         {
             var stats = student.GetStatistics();
 
@@ -42,7 +42,7 @@ namespace ChallengeApp
                 letterGrade = "-";
             }
 
-            Console.WriteLine($"Student: {student.Name}; Min: {stats.Minimum}; Max: {stats.Maximum}; Mean: {stats.Average}; LetterGrade: {letterGrade}");
+            Console.WriteLine($"Student: {student.Name}; Min: {stats.Minimum}; Max: {stats.Maximum}; Mean: {Math.Round(stats.Average, 2)}; LetterGrade: {letterGrade}");
 
         }
     }
