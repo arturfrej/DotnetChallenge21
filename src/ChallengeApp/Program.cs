@@ -10,7 +10,6 @@ namespace ChallengeApp
         private const string ver = "1.0";
         static void Main(string[] args)
         {
-            // string selectedStudent = null;
             StudentInFile student = null;
 
             if(!Directory.Exists("studentdb"))
@@ -32,11 +31,11 @@ namespace ChallengeApp
 
                 switch(command)
                 {
-                    case string c when c.StartsWith("ADDGRADE ", StringComparison.OrdinalIgnoreCase):
-                        CmdAddGrade(command, student);
-                        break;
                     case string c when c.Equals("ADDGRADES", StringComparison.OrdinalIgnoreCase):
                         CmdAddGrades(student);
+                        break;
+                    case string c when c.StartsWith("ADDGRADE", StringComparison.OrdinalIgnoreCase):
+                        CmdAddGrade(command, student);
                         break;
                     case string c when c.StartsWith("ADDSTUDENT", StringComparison.OrdinalIgnoreCase):
                         CmdAddStudent(command);
@@ -65,6 +64,8 @@ namespace ChallengeApp
                         if(CmdSelectStudent(command, out newStudent))
                         {
                             student = newStudent;
+                            student.GradeAdded += OnGradeAdded;
+                            student.GradesCleared += OnGradesCleared;
                         }
                         break;
                     case string c when c.Equals("STATS", StringComparison.OrdinalIgnoreCase):
@@ -86,6 +87,12 @@ namespace ChallengeApp
             }
 
             var inData = command.Remove(0, "ADDGRADE".Length).Trim();
+
+            if(String.IsNullOrWhiteSpace(inData))
+            {   
+                Console.WriteLine("Invalid argument. Example usage: ADDGRADE 5+");
+                return;
+            }
 
             try
             {
@@ -130,6 +137,12 @@ namespace ChallengeApp
         static void CmdAddStudent(string command)
         {
             var inData = command.Remove(0, "ADDSTUDENT".Length).Trim();
+
+            if(String.IsNullOrWhiteSpace(inData))
+            {   
+                Console.WriteLine("Invalid argument. Example usage: ADDSTUDENT Anton");
+                return;
+            }
 
             var existingStudents = StudentInFile.ListStudents();
 
@@ -256,6 +269,12 @@ namespace ChallengeApp
 
             student = null;
 
+            if(String.IsNullOrWhiteSpace(inData))
+            {   
+                Console.WriteLine("Invalid argument. Example usage: SELECTSTUDENT Anton");
+                return false;
+            }
+
             foreach (var es in existingStudents)
             {
                 if(es.Equals(inData, StringComparison.OrdinalIgnoreCase))
@@ -268,7 +287,7 @@ namespace ChallengeApp
             if(!isFound)
             {
                 Console.WriteLine($"Student {inData} does not exist");
-                return isFound;
+                return false;
             }
 
             try
