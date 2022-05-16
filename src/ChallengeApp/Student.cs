@@ -28,7 +28,7 @@ namespace ChallengeApp
             
             if(this.GradeAdded != null)
             {
-                GradeAddedEventArgs args = new GradeAddedEventArgs(grade);
+                GradeAddedEventArgs args = new GradeAddedEventArgs(this.Name, grade);
                 this.GradeAdded(this, args);
             }
         }
@@ -79,7 +79,8 @@ namespace ChallengeApp
 
             if(this.GradesCleared != null)
             {
-                this.GradesCleared(this);
+                GradesClearedEventArgs args = new GradesClearedEventArgs(this.Name);
+                this.GradesCleared(this, args);
             }
         }
 

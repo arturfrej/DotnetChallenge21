@@ -8,7 +8,6 @@ namespace ChallengeApp
     {
         public override event GradeAddedDelegate GradeAdded;
         public override event GradesClearedDelegate GradesCleared;
-
         private const string filenameAudit = "audit.txt";
         private string Filename
         {
@@ -27,12 +26,14 @@ namespace ChallengeApp
             }
 
             using (var writer = File.AppendText(this.Filename))
+            using (var writerAudit = File.AppendText(filenameAudit))
             {
                 writer.WriteLine(grade);
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: GradeAdded: {grade}");
 
                 if(this.GradeAdded != null)
                 {
-                    GradeAddedEventArgs args = new GradeAddedEventArgs(grade);
+                    GradeAddedEventArgs args = new GradeAddedEventArgs(this.Name, grade);
                     this.GradeAdded(this, args);
                 }
             }
@@ -72,14 +73,21 @@ namespace ChallengeApp
         {
             File.Create(this.Filename).Dispose();
 
+            using (var writerAudit = File.AppendText(filenameAudit))
+            {
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: GradesCleared");
+            }
+
             if(this.GradesCleared != null)
             {
-                this.GradesCleared(this);
+                GradesClearedEventArgs args = new GradesClearedEventArgs(this.Name);
+                this.GradesCleared(this, args);
             }
         }
 
         public new void ChangeName(string newName)
         {
+            var oldName = this.Name;
             var oldFilename = this.Filename;
 
             base.ChangeName(newName);
@@ -87,6 +95,11 @@ namespace ChallengeApp
             if(File.Exists(oldFilename))
             {
                 File.Move(oldFilename, this.Filename);
+            }
+            
+            using (var writerAudit = File.AppendText(filenameAudit))
+            {
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {oldName}: NameChanged: {this.Name}");
             }
         }
 
