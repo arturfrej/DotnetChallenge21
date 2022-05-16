@@ -9,9 +9,10 @@ namespace ChallengeApp
         public override event GradeAddedDelegate GradeAdded;
         public override event GradesClearedDelegate GradesCleared;
         private const string filenameAudit = "audit.txt";
+        private const string dataDir = "studentdb";
         private string Filename
         {
-            get { return $"{this.Name}.txt"; }
+            get { return $"{dataDir}\\{this.Name}.txt"; }
         }
 
         public StudentInFile(string name) : base(name)
@@ -75,7 +76,7 @@ namespace ChallengeApp
 
             using (var writerAudit = File.AppendText(filenameAudit))
             {
-                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: GradesCleared");
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: Grades cleared");
             }
 
             if(this.GradesCleared != null)
@@ -99,7 +100,73 @@ namespace ChallengeApp
             
             using (var writerAudit = File.AppendText(filenameAudit))
             {
-                writerAudit.WriteLine($"{DateTime.UtcNow}: {oldName}: NameChanged: {this.Name}");
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {oldName}: Name changed: {this.Name}");
+            }
+        }
+
+        public static List<string> ListStudents()
+        {
+            List<string> existingStudents = new List<string>();
+
+            string[] files = Directory.GetFiles($"{dataDir}", "*.txt");
+            foreach(var file in files)
+            {
+                existingStudents.Add(Path.GetFileNameWithoutExtension(file));
+            }
+
+            return existingStudents;
+        }
+        
+        public override List<double> GetGrades()
+        {
+            List<double> grades = new List<double>();
+            double grade;
+            
+            if(File.Exists(this.Filename))
+            {
+                using (var reader = File.OpenText(this.Filename))
+                {
+                    var line = reader.ReadLine();
+                    while (line != null)
+                    {
+                        if(double.TryParse(line, out grade))
+                        {
+                            grades.Add(grade);
+                        }
+                        else
+                        {
+                            throw new InvalidDataException($"Invalid content of {this.Filename}");
+                        }
+                        line = reader.ReadLine();
+                    }
+                }
+            }
+
+            return grades;
+        }
+        public void CreateStudentEntry()
+        {
+            if(!File.Exists(this.Filename))
+            {
+                File.CreateText(this.Filename).Dispose();
+            }
+            
+            using (var writerAudit = File.AppendText(filenameAudit))
+            {
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: Student DB entry created");
+            }
+        }
+
+        public void DeleteStudentData()
+        {
+            if(File.Exists(this.Filename))
+            {
+                File.Delete(this.Filename);
+            }
+            
+            using (var writerAudit = File.AppendText(filenameAudit))
+            {
+                writerAudit.WriteLine($"{DateTime.UtcNow}: {this.Name}: Student DB entry deleted");
             }
         }
 

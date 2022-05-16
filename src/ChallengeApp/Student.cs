@@ -83,6 +83,10 @@ namespace ChallengeApp
                 this.GradesCleared(this, args);
             }
         }
+        public override List<double> GetGrades()
+        {
+            return this.grades;
+        }
 
         public override Statistics GetStatistics()
         {

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ChallengeApp
 {
     public delegate void GradeAddedDelegate(object sender, GradeAddedEventArgs args);
@@ -13,6 +15,7 @@ namespace ChallengeApp
         public abstract event GradesClearedDelegate GradesCleared;
         public abstract void AddGrade(double grade);
         public abstract void AddGrade(string grade);
+        public abstract List<double> GetGrades();
         public abstract void ClearGrades();
         public abstract Statistics GetStatistics();
     }
