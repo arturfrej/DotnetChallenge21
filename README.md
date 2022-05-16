@@ -20,6 +20,7 @@ Example usage:
 \>> addgrade 5
 
 \>> stats
+
 Statistics for student Anton:
 
 Count: 4
